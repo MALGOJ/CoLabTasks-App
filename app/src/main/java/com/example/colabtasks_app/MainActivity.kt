@@ -11,12 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.colabtasks_app.DB.CoLabTasksDataBase
+import com.example.colabtasks_app.DB.Dao.AuthTokenDao
+import com.example.colabtasks_app.DB.Entity.AuthToken
 import com.example.colabtasks_app.screens.LoginScreen
 import com.example.colabtasks_app.ui.theme.CoLabTasksAppTheme
 
 class MainActivity : ComponentActivity() {
+
+    // Dao
+    private lateinit var authTokenDao: AuthTokenDao
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val db = CoLabTasksDataBase.getDatabase(applicationContext)
+
+        authTokenDao = db.authTokenDao()
+
         enableEdgeToEdge()
         setContent {
             CoLabTasksAppTheme {
