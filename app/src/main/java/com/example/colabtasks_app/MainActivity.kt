@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.colabtasks_app.DB.CoLabTasksDataBase
 import com.example.colabtasks_app.DB.Dao.AuthTokenDao
-import com.example.colabtasks_app.DB.Entity.AuthToken
+import com.example.colabtasks_app.DB.Repository.AuthTokenRepository
 import com.example.colabtasks_app.screens.LoginScreen
 import com.example.colabtasks_app.ui.theme.CoLabTasksAppTheme
 
@@ -22,17 +22,21 @@ class MainActivity : ComponentActivity() {
     // Dao
     private lateinit var authTokenDao: AuthTokenDao
 
+    // Repository
+    private lateinit var authTokenRepository: AuthTokenRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db = CoLabTasksDataBase.getDatabase(applicationContext)
 
         authTokenDao = db.authTokenDao()
+        authTokenRepository = AuthTokenRepository(authTokenDao)
 
         enableEdgeToEdge()
         setContent {
             CoLabTasksAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    navegationApp()
+                    navegationApp( authTokenRepository = authTokenRepository)
                 }
             }
         }
@@ -40,14 +44,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun navegationApp() {
+fun navegationApp(authTokenRepository: AuthTokenRepository) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = "login"
     ) {
         composable("login") {
-            LoginScreen()
+            LoginScreen(authTokenRepository = authTokenRepository)
         }
     }
 }

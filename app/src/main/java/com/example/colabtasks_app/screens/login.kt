@@ -15,11 +15,21 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
+import com.example.colabtasks_app.Api.LoginRequest
+import com.example.colabtasks_app.Api.RetrofitInstance
+import com.example.colabtasks_app.DB.Entity.AuthToken
+import com.example.colabtasks_app.DB.Repository.AuthTokenRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(authTokenRepository: AuthTokenRepository) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Column(
         modifier = Modifier
@@ -57,11 +67,48 @@ fun LoginScreen() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { /*onLogin(email, password)*/ },
+            onClick = {
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    onLogin(email, password) {
+                        if (it != null) {
+                            val token = it
+                            val tokenEntity = AuthToken(token = token)
+                            scope.launch {
+                                authTokenRepository.insertAuthToken(tokenEntity)
+                            }
+                        }else{
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Credenciales incorrectas")
+                            }
+                        }
+                    }
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text("Login", color = Color.White)
+        }
+    }
+}
+
+fun onLogin(email: String, password: String, onResult: (String?) -> Unit) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val body = LoginRequest(email, password)
+            val response = RetrofitInstance.api.login(body)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    val authHeader = response.headers()["Authorization"]
+                    onResult(authHeader)
+                } else {
+                    onResult(null)
+                }
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                onResult(null)
+            }
         }
     }
 }

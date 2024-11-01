@@ -3,11 +3,10 @@ package com.example.colabtasks_app.DB.Dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import com.example.colabtasks_app.DB.Entity.AuthToken
 
 @Dao
-interface AuthTokenDao{
+interface AuthTokenDao {
     @Insert
     suspend fun insertToken(token: AuthToken)
 
