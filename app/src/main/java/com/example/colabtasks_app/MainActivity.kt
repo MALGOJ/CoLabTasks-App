@@ -49,10 +49,10 @@ fun navegationApp(authTokenRepository: AuthTokenRepository) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "Menu"
+        startDestination = "login"
     ) {
         composable("login") {
-            LoginScreen(authTokenRepository = authTokenRepository)
+            LoginScreen(authTokenRepository = authTokenRepository, navController = navController)
         }
 
         composable("Menu") {

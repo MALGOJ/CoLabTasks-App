@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavHostController
 import com.example.colabtasks_app.Api.LoginRequest
 import com.example.colabtasks_app.Api.RetrofitInstance
 import com.example.colabtasks_app.DB.Entity.AuthToken
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun LoginScreen(authTokenRepository: AuthTokenRepository) {
+fun LoginScreen(authTokenRepository: AuthTokenRepository, navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -77,6 +78,7 @@ fun LoginScreen(authTokenRepository: AuthTokenRepository) {
                                 authTokenRepository.insertAuthToken(tokenEntity)
                             }
                             println("::::::::::::::::::::::::::::::::::::::::::::::")
+                            navController.navigate("Menu")
                         }else{
                             scope.launch {
                                 snackbarHostState.showSnackbar("Credenciales incorrectas")
