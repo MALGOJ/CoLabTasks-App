@@ -76,6 +76,7 @@ fun LoginScreen(authTokenRepository: AuthTokenRepository) {
                             scope.launch {
                                 authTokenRepository.insertAuthToken(tokenEntity)
                             }
+                            println("::::::::::::::::::::::::::::::::::::::::::::::")
                         }else{
                             scope.launch {
                                 snackbarHostState.showSnackbar("Credenciales incorrectas")

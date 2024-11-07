@@ -15,6 +15,7 @@ import com.example.colabtasks_app.DB.CoLabTasksDataBase
 import com.example.colabtasks_app.DB.Dao.AuthTokenDao
 import com.example.colabtasks_app.DB.Repository.AuthTokenRepository
 import com.example.colabtasks_app.screens.LoginScreen
+import com.example.colabtasks_app.screens.MainScreen
 import com.example.colabtasks_app.ui.theme.CoLabTasksAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CoLabTasksAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    navegationApp( authTokenRepository = authTokenRepository)
+                    navegationApp(authTokenRepository = authTokenRepository)
                 }
             }
         }
@@ -48,10 +49,14 @@ fun navegationApp(authTokenRepository: AuthTokenRepository) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "Menu"
     ) {
         composable("login") {
             LoginScreen(authTokenRepository = authTokenRepository)
+        }
+
+        composable("Menu") {
+            MainScreen()
         }
     }
 }
