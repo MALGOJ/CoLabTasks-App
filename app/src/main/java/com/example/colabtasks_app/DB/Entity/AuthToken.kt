@@ -1,5 +1,6 @@
 package com.example.colabtasks_app.DB.Entity
 
+import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,5 +8,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "auth_token")
 data class AuthToken(
     @PrimaryKey(autoGenerate = true) val idToken: Long = 0,
-    val token: String
+    val token: String,
+    val email: String
 )

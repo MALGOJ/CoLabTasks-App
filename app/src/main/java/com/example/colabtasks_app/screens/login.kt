@@ -26,7 +26,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun LoginScreen(authTokenRepository: AuthTokenRepository, navController: NavHostController) {
+fun LoginScreen(
+    authTokenRepository: AuthTokenRepository,
+    navController: NavHostController
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -73,13 +76,17 @@ fun LoginScreen(authTokenRepository: AuthTokenRepository, navController: NavHost
                     onLogin(email, password) {
                         if (it != null) {
                             val token = it
-                            val tokenEntity = AuthToken(token = token)
+                            val tokenEntity = AuthToken(token = token, email = email)
                             scope.launch {
+                                val cantidadRegistros = authTokenRepository.count()
+                                if (cantidadRegistros > 0) {
+                                    authTokenRepository.deleteAll()
+                                }
                                 authTokenRepository.insertAuthToken(tokenEntity)
                             }
                             println("::::::::::::::::::::::::::::::::::::::::::::::")
                             navController.navigate("Menu")
-                        }else{
+                        } else {
                             scope.launch {
                                 snackbarHostState.showSnackbar("Credenciales incorrectas")
                             }

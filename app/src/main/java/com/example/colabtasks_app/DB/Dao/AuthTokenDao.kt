@@ -23,4 +23,10 @@ interface AuthTokenDao {
     //eliminar por el id
     @Query("DELETE FROM auth_token WHERE idToken = :idToken")
     suspend fun deleteToken(idToken: Long)
+
+    @Query("SELECT COUNT(*) FROM auth_token")
+    suspend fun count(): Int
+
+    @Query("DELETE FROM auth_token")
+    suspend fun deleteAll()
 }

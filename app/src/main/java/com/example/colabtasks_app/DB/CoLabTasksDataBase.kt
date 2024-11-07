@@ -20,7 +20,7 @@ abstract class CoLabTasksDataBase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     CoLabTasksDataBase::class.java,
-                    "colabtasks_database"
+                    "colabtask_database"
                 ).build()
                 INSTANCE = instance
                 instance

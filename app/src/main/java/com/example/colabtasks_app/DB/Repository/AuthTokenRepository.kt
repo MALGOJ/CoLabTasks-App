@@ -15,4 +15,8 @@ class AuthTokenRepository(private val authTokenDao: AuthTokenDao) {
     suspend fun updateAuthToken(idToken: Long, token: String) = authTokenDao.updateToken(idToken, token)
 
     suspend fun deleteAuthToken(idToken: Long) = authTokenDao.deleteToken(idToken)
+
+    suspend fun count() = authTokenDao.count()
+
+    suspend fun deleteAll() = authTokenDao.deleteAll()
 }
