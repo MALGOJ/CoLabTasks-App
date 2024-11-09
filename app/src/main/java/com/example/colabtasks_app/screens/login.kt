@@ -35,69 +35,82 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Iniciar sección",
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                color = MaterialTheme.colorScheme.onPrimary
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Iniciar sesión",
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             )
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email Icon") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                if (email.isNotEmpty() && password.isNotEmpty()) {
-                    onLogin(email, password) {
-                        if (it != null) {
-                            val token = it
-                            val tokenEntity = AuthToken(token = token, email = email)
-                            scope.launch {
-                                val cantidadRegistros = authTokenRepository.count()
-                                if (cantidadRegistros > 0) {
-                                    authTokenRepository.deleteAll()
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email Icon") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        onLogin(email, password) {
+                            if (it != null) {
+                                val token = it
+                                val tokenEntity = AuthToken(token = token, email = email)
+                                scope.launch {
+                                    val cantidadRegistros = authTokenRepository.count()
+                                    if (cantidadRegistros > 0) {
+                                        authTokenRepository.deleteAll()
+                                    }
+                                    authTokenRepository.insertAuthToken(tokenEntity)
                                 }
-                                authTokenRepository.insertAuthToken(tokenEntity)
-                            }
-                            println("::::::::::::::::::::::::::::::::::::::::::::::")
-                            navController.navigate("Menu")
-                        } else {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Credenciales incorrectas")
+                                navController.navigate("Menu")
+                            } else {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Credenciales incorrectas")
+                                }
                             }
                         }
                     }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Text("Login", color = Color.White)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            TextButton(
+                onClick = {
+                    navController.navigate("SignUp")
                 }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-        ) {
-            Text("Login", color = Color.White)
+            ) {
+                Text("¿No tienes una cuenta? Regístrate aquí")
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ import com.example.colabtasks_app.DB.Dao.AuthTokenDao
 import com.example.colabtasks_app.DB.Repository.AuthTokenRepository
 import com.example.colabtasks_app.screens.LoginScreen
 import com.example.colabtasks_app.screens.MainScreen
+import com.example.colabtasks_app.screens.SignUpScreen
 import com.example.colabtasks_app.ui.theme.CoLabTasksAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -62,6 +63,10 @@ fun navegationApp(authTokenRepository: AuthTokenRepository) {
 
         composable("Menu") {
             MainScreen()
+        }
+
+        composable("SignUp") {
+            SignUpScreen(navController = navController)
         }
     }
 }
