@@ -10,3 +10,19 @@ data class SignupDto(
     val name: String,
     val password: String
 )
+
+data class assignedUser(
+    val email: String?
+)
+
+data class Tasks(
+    val id: Long?,
+    val title: String?,
+    val description: String?,
+    val status: String?,
+    val priority: String?,
+    val dueDate: String?,
+    val updatedDate: String?,
+    val proyectId: Long?,
+    val assignedUser: assignedUser?
+)

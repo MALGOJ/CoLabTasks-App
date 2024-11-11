@@ -80,7 +80,7 @@ fun LoginScreen(
                         onLogin(email, password) {
                             if (it != null) {
                                 val token = it
-                                val tokenEntity = AuthToken(token = token, email = email)
+                                val tokenEntity = AuthToken(idToken = 1, token = token, email = email)
                                 scope.launch {
                                     val cantidadRegistros = authTokenRepository.count()
                                     if (cantidadRegistros > 0) {

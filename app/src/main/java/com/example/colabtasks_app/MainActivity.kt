@@ -14,16 +14,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.colabtasks_app.DB.CoLabTasksDataBase
 import com.example.colabtasks_app.DB.Dao.AuthTokenDao
 import com.example.colabtasks_app.DB.Repository.AuthTokenRepository
-import com.example.colabtasks_app.screens.LoginScreen
-import com.example.colabtasks_app.screens.MainScreen
-import com.example.colabtasks_app.screens.SignUpScreen
+import com.example.colabtasks_app.screens.*
 import com.example.colabtasks_app.ui.theme.CoLabTasksAppTheme
 
 class MainActivity : ComponentActivity() {
-
     // Dao
     private lateinit var authTokenDao: AuthTokenDao
-
     // Repository
     private lateinit var authTokenRepository: AuthTokenRepository
 
@@ -58,15 +54,28 @@ fun navegationApp(authTokenRepository: AuthTokenRepository) {
         startDestination = startDestination
     ) {
         composable("login") {
-            LoginScreen(authTokenRepository = authTokenRepository, navController = navController)
+            LoginScreen(
+                authTokenRepository = authTokenRepository,
+                navController = navController
+            )
         }
 
         composable("Menu") {
-            MainScreen()
+            MainScreen(
+                authTokenRepository = authTokenRepository,
+                navController = navController
+            )
         }
 
         composable("SignUp") {
             SignUpScreen(navController = navController)
+        }
+
+        composable("ListTanks") {
+            ListTaks(
+                authTokenRepository = authTokenRepository,
+                navController = navController
+            )
         }
     }
 }
