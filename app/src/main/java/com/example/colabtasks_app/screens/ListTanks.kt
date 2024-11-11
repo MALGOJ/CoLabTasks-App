@@ -12,45 +12,44 @@ import com.example.colabtasks_app.Api.RetrofitInstance
 import com.example.colabtasks_app.Api.Tasks
 import com.example.colabtasks_app.DB.Entity.AuthToken
 import com.example.colabtasks_app.DB.Repository.AuthTokenRepository
+import com.example.colabtasks_app.screens.Scaffold.AppScaffold
 import kotlinx.coroutines.launch
 
 @Composable
 fun ListTaks(authTokenRepository: AuthTokenRepository, navController: NavHostController) {
-    println(":::::::ESTA ACA :::::::::")
-    val scope = rememberCoroutineScope()
-    var token by remember { mutableStateOf<AuthToken?>(null) }
-    var tasks by remember { mutableStateOf<List<Tasks>>(emptyList()) }
-    val snackbarHostState = remember { SnackbarHostState() }
+    AppScaffold(authTokenRepository = authTokenRepository, navController = navController) { paddingValues ->
+        val scope = rememberCoroutineScope()
+        var token by remember { mutableStateOf<AuthToken?>(null) }
+        var tasks by remember { mutableStateOf<List<Tasks>>(emptyList()) }
+        val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
-        scope.launch {
-            val authToken = authTokenRepository.getAuthToken(idToken = 1)
-            token = authToken
-            println("Toquen ${token}")
-            val response = RetrofitInstance.api.getTasks("Bearer ${token?.token ?: ""}")
-            println(":::::::ESTA ACA ::::::::: ${response}")
-            if (response.isSuccessful) {
-                tasks = response.body() ?: emptyList()
-            } else if (response.code() == 403) {
-                snackbarHostState.showSnackbar("Token de seguridad expiró")
-                navController.navigate("login")
-            } else {
-                snackbarHostState.showSnackbar("Ha ocurrido un error inesperado, intente después")
+        LaunchedEffect(Unit) {
+            scope.launch {
+                val authToken = authTokenRepository.getAuthToken(idToken = 1)
+                token = authToken
+                val response = RetrofitInstance.api.getTasks("Bearer ${token?.token ?: ""}")
+                if (response.isSuccessful) {
+                    tasks = response.body() ?: emptyList()
+                } else if (response.code() == 403) {
+                    snackbarHostState.showSnackbar("Token de seguridad expiró")
+                    navController.navigate("login")
+                } else {
+                    snackbarHostState.showSnackbar("Ha ocurrido un error inesperado, intente después")
+                }
+            }
+        }
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            items(tasks) { task ->
+                TaskItem(task = task)
             }
         }
     }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        items(tasks) { task ->
-            TaskItem(task = task)
-        }
-    }
 }
-
 @Composable
 fun TaskItem(task: Tasks) {
     Card(
