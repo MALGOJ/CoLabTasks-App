@@ -26,3 +26,11 @@ data class Tasks(
     val proyectId: Long?,
     val assignedUser: assignedUser?
 )
+
+data class CreateTask(
+    val title: String,
+    val description: String,
+    val status: String,
+    val priority: String,
+    val dueDate: String,
+)

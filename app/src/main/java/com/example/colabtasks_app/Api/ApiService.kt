@@ -18,4 +18,8 @@ interface ApiService {
     //lista las tareas
     @GET("/api/tasks")
     suspend fun getTasks(@Header("Authorization") token: String): Response<List<Tasks>>
+
+    //crea una tarea
+    @POST("/api/tasks/saveTask")
+    suspend fun saveTask(@Header("Authorization") token: String, @Body task: CreateTask): Response<Void>
 }

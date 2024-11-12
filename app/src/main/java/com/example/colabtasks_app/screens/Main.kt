@@ -17,7 +17,10 @@ fun MainScreen(
     authTokenRepository: AuthTokenRepository,
     navController: NavHostController
 ) {
-    AppScaffold(authTokenRepository = authTokenRepository, navController = navController) { paddingValues ->
+    AppScaffold(
+        authTokenRepository = authTokenRepository,
+        navController = navController
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

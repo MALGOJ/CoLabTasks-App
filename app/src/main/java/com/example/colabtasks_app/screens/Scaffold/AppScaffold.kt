@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 fun AppScaffold(
     authTokenRepository: AuthTokenRepository,
     navController: NavHostController,
+    snackbarHost: @Composable () -> Unit = {}, // Agregar este parámetro
     content: @Composable (PaddingValues) -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
@@ -38,6 +39,7 @@ fun AppScaffold(
                 }
             )
         },
+        snackbarHost = snackbarHost, // Pasar el snackbarHost aquí
         content = { paddingValues ->
             Box(
                 modifier = Modifier
@@ -79,7 +81,7 @@ fun AppScaffold(
                             }
                             Button(
                                 onClick = {
-                                    navController.navigate("ListTanks")
+                                    navController.navigate("TasksList")
                                 },
                                 modifier = Modifier
                                     .padding(vertical = 1.dp)

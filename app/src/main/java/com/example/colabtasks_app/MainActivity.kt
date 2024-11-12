@@ -20,6 +20,7 @@ import com.example.colabtasks_app.ui.theme.CoLabTasksAppTheme
 class MainActivity : ComponentActivity() {
     // Dao
     private lateinit var authTokenDao: AuthTokenDao
+
     // Repository
     private lateinit var authTokenRepository: AuthTokenRepository
 
@@ -71,8 +72,14 @@ fun navegationApp(authTokenRepository: AuthTokenRepository) {
             SignUpScreen(navController = navController)
         }
 
-        composable("ListTanks") {
-            ListTaks(
+        composable("TasksList") {
+            TasksList(
+                authTokenRepository = authTokenRepository,
+                navController = navController
+            )
+        }
+        composable("TaskCreate") {
+            TaskCreate(
                 authTokenRepository = authTokenRepository,
                 navController = navController
             )
