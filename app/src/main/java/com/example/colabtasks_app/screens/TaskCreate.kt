@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.colabtasks_app.Api.CreateTask
+import com.example.colabtasks_app.Api.RetrofitInstance
 import com.example.colabtasks_app.DB.Repository.AuthTokenRepository
 import com.example.colabtasks_app.Data.TaskPriority
 import com.example.colabtasks_app.Data.TaskStatus
@@ -82,6 +83,7 @@ fun TaskCreate(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
+
             ExposedDropdownMenuBox(
                 expanded = expandedStatus,
                 onExpandedChange = { expandedStatus = !expandedStatus }
@@ -113,7 +115,9 @@ fun TaskCreate(
                     }
                 }
             }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             ExposedDropdownMenuBox(
                 expanded = expandedPriority,
                 onExpandedChange = { expandedPriority = !expandedPriority }
@@ -145,6 +149,7 @@ fun TaskCreate(
                     }
                 }
             }
+
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { datePickerDialog.show() },
@@ -167,13 +172,25 @@ fun TaskCreate(
                     scope.launch {
                         if (title.isNotEmpty() && description.isNotEmpty() && dueDate.isNotEmpty()) {
                             val newTask = CreateTask(
-                                title = title,
-                                description = description,
-                                status = status.key,
-                                priority = priority.key,
-                                dueDate = dueDate
+                                titleDto = title,
+                                descriptionDto = description,
+                                statusDto = status.name,
+                                priorityDto = priority.name,
+                                dueDateDto = dueDate
                             )
-                            println("nueva tarea $newTask")
+                            val toquen = authTokenRepository.getAuthToken(idToken = 1)
+
+                            val response = RetrofitInstance.api.saveTask(
+                                token = "Bearer ${toquen?.token ?: ""}",
+                                task = newTask
+                            )
+                            if (response.isSuccessful) {
+                                navController.navigate("TasksList")
+                            } else {
+                                snackbarHostState.showSnackbar(
+                                    message = "Error al guardar la tarea"
+                                )
+                            }
                         } else {
                             snackbarHostState.showSnackbar(
                                 message = "Por favor complete todos los campos"

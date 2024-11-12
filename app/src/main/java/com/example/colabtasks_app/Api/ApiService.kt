@@ -21,5 +21,8 @@ interface ApiService {
 
     //crea una tarea
     @POST("/api/tasks/saveTask")
-    suspend fun saveTask(@Header("Authorization") token: String, @Body task: CreateTask): Response<Void>
+    suspend fun saveTask(
+        @Header("Authorization") token: String,
+        @Body task: CreateTask
+    ): Response<Void>
 }

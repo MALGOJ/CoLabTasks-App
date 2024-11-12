@@ -28,9 +28,9 @@ data class Tasks(
 )
 
 data class CreateTask(
-    val title: String,
-    val description: String,
-    val status: String,
-    val priority: String,
-    val dueDate: String,
+    val titleDto: String,
+    val descriptionDto: String,
+    val statusDto: String,
+    val priorityDto: String,
+    val dueDateDto: String
 )
