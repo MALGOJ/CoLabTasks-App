@@ -2,9 +2,11 @@ package com.example.colabtasks_app.Api
 
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 interface ApiService {
@@ -24,5 +26,11 @@ interface ApiService {
     suspend fun saveTask(
         @Header("Authorization") token: String,
         @Body task: CreateTask
+    ): Response<Void>
+
+    @DELETE("/api/tasks/deleteTask/{id}")
+    suspend fun deleteTask(
+        @Header("Authorization") token: String,
+        @Path("id") id: Long
     ): Response<Void>
 }

@@ -1,7 +1,5 @@
 package com.example.colabtasks_app.DB.Entity
 
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

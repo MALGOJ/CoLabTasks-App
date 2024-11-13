@@ -186,6 +186,12 @@ fun TaskCreate(
                             )
                             if (response.isSuccessful) {
                                 navController.navigate("TasksList")
+                            } else if (response.code() == 403) {
+                                println("Token de seguridad expiró")
+                                snackbarHostState.showSnackbar(
+                                    message = "Sección ha expirado, por favor inicie sesión nuevamente"
+                                )
+                                navController.navigate("login")
                             } else {
                                 snackbarHostState.showSnackbar(
                                     message = "Error al guardar la tarea"

@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -80,7 +81,17 @@ fun TasksList(
                             .padding(16.dp)
                     ) {
                         items(tasks) { task ->
-                            TaskItem(task = task)
+                            TaskItem(task = task, token = token?.token ?: "", snackbarHostState = snackbarHostState) {
+                                // Refresh the task list after deletion
+                                scope.launch {
+                                    val response = RetrofitInstance.api.getTasks("Bearer ${token?.token ?: ""}")
+                                    if (response.isSuccessful) {
+                                        tasks = response.body() ?: emptyList()
+                                    } else {
+                                        snackbarHostState.showSnackbar("Error al recargar las tareas")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -90,7 +101,12 @@ fun TasksList(
 }
 
 @Composable
-fun TaskItem(task: Tasks) {
+fun TaskItem(
+    task: Tasks, token: String,
+    snackbarHostState: SnackbarHostState,
+    onTaskDeleted: () -> Unit
+) {
+    val scope = rememberCoroutineScope()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -106,6 +122,28 @@ fun TaskItem(task: Tasks) {
             Text(text = "Priority: ${task.priority}", style = MaterialTheme.typography.bodySmall)
             Text(text = "Due Date: ${task.dueDate}", style = MaterialTheme.typography.bodySmall)
             Text(text = "Updated Date: ${task.updatedDate}", style = MaterialTheme.typography.bodySmall)
+        }
+        Button(
+            onClick = {
+                val id = task.id ?: 0
+                scope.launch {
+                    val response = RetrofitInstance.api.deleteTask("Bearer ${token}", id)
+                    if (response.isSuccessful) {
+                        snackbarHostState.showSnackbar(
+                            message = "Tarea eliminada exitosamente",
+                            duration = SnackbarDuration.Short
+                        )
+                        onTaskDeleted()
+                    } else {
+                        println("Error al eliminar tarea")
+                    }
+                }
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+        ) {
+            Icon(Icons.Default.Delete, contentDescription = "Delete")
+            Spacer(modifier = Modifier.width(8.dp))
         }
     }
 }
