@@ -41,4 +41,10 @@ interface ApiService {
         @Path("id") id: Long,
         @Body task: CreateTask
     ): Response<Void>
+
+    @GET("/api/tasks/getTaskById/{id}")
+    suspend fun getTaskById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Long
+    ): Response<Tasks>
 }

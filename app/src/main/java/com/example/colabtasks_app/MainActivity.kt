@@ -84,6 +84,15 @@ fun navegationApp(authTokenRepository: AuthTokenRepository) {
                 navController = navController
             )
         }
+        composable("TaskUpdate/{taskId}") { backStackEntry ->
+            val taskId = backStackEntry.arguments?.getString("taskId")
+            TaskUpdate(
+                taskId = taskId,
+                authTokenRepository = authTokenRepository,
+                navController = navController
+            )
+        }
+
     }
 }
 
