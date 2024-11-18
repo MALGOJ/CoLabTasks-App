@@ -80,6 +80,32 @@ fun TaskUpdate(
         true
     )
 
+    scope.launch{
+        val toquen = authTokenRepository.getAuthToken(idToken = 1)
+        val response = RetrofitInstance.api.getTaskById("Bearer ${toquen?.token ?: ""}", taskId?.toLong() ?: 0)
+        if (response.isSuccessful) {
+            val task = response.body()
+            if (task != null) {
+                title = task.title ?: ""
+                description = task.description ?: ""
+                status = TaskStatus.valueOf(task.status ?: "TODO")
+                priority = TaskPriority.valueOf(task.priority ?: "LOW")
+                dueDate = task.dueDate ?: ""
+            }
+        } else if (response.code() == 403) {
+            println("Token de seguridad expiró")
+            snackbarHostState.showSnackbar(
+                message = "Sección ha expirado, por favor inicie sesión nuevamente"
+            )
+            navController.navigate("login")
+        } else {
+            snackbarHostState.showSnackbar(
+                message = "Error al obtener la tarea"
+            )
+        }
+
+    }
+
     AppScaffold(
         authTokenRepository = authTokenRepository,
         navController = navController,
@@ -201,8 +227,9 @@ fun TaskUpdate(
                             )
                             val toquen = authTokenRepository.getAuthToken(idToken = 1)
 
-                            val response = RetrofitInstance.api.saveTask(
+                            val response = RetrofitInstance.api.updateTask(
                                 token = "Bearer ${toquen?.token ?: ""}",
+                                id = taskId?.toLong() ?: 0,
                                 task = newTask
                             )
                             if (response.isSuccessful) {

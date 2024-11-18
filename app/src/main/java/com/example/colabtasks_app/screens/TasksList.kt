@@ -82,7 +82,7 @@ fun TasksList(
                             .padding(16.dp)
                     ) {
                         items(tasks) { task ->
-                            TaskItem(task = task, token = token?.token ?: "", snackbarHostState = snackbarHostState) {
+                            TaskItem(task = task, token = token?.token ?: "", snackbarHostState = snackbarHostState, navController) {
                                 // Refresh the task list after deletion
                                 scope.launch {
                                     val response = RetrofitInstance.api.getTasks("Bearer ${token?.token ?: ""}")
@@ -105,6 +105,7 @@ fun TasksList(
 fun TaskItem(
     task: Tasks, token: String,
     snackbarHostState: SnackbarHostState,
+    navController: NavHostController,
     onTaskDeleted: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -151,7 +152,7 @@ fun TaskItem(
 
             Button(
                 onClick = {
-
+                    navController.navigate("TaskUpdate/${task.id}")
                 },
 
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
