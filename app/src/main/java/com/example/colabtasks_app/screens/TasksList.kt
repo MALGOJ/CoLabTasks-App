@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -123,27 +124,40 @@ fun TaskItem(
             Text(text = "Due Date: ${task.dueDate}", style = MaterialTheme.typography.bodySmall)
             Text(text = "Updated Date: ${task.updatedDate}", style = MaterialTheme.typography.bodySmall)
         }
-        Button(
-            onClick = {
-                val id = task.id ?: 0
-                scope.launch {
-                    val response = RetrofitInstance.api.deleteTask("Bearer ${token}", id)
-                    if (response.isSuccessful) {
-                        snackbarHostState.showSnackbar(
-                            message = "Tarea eliminada exitosamente",
-                            duration = SnackbarDuration.Short
-                        )
-                        onTaskDeleted()
-                    } else {
-                        println("Error al eliminar tarea")
-                    }
-                }
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
         ) {
-            Icon(Icons.Default.Delete, contentDescription = "Delete")
-            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    val id = task.id ?: 0
+                    scope.launch {
+                        val response = RetrofitInstance.api.deleteTask("Bearer ${token}", id)
+                        if (response.isSuccessful) {
+                            snackbarHostState.showSnackbar(
+                                message = "Tarea eliminada exitosamente",
+                                duration = SnackbarDuration.Short
+                            )
+                            onTaskDeleted()
+                        } else {
+                            println("Error al eliminar tarea")
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "Delete")
+            }
+
+            Button(
+                onClick = {
+                    // Acción de actualización
+                },
+
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Icon(Icons.Default.Edit, contentDescription = "Update")
+            }
         }
     }
 }

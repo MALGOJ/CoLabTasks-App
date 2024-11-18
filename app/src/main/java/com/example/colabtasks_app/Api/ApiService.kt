@@ -6,6 +6,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 
@@ -32,5 +33,12 @@ interface ApiService {
     suspend fun deleteTask(
         @Header("Authorization") token: String,
         @Path("id") id: Long
+    ): Response<Void>
+
+    @PUT("/api/tasks/updateTaskById/{id}")
+    suspend fun updateTask(
+        @Header("Authorization") token: String,
+        @Path("id") id: Long,
+        @Body task: CreateTask
     ): Response<Void>
 }
