@@ -95,12 +95,3 @@ fun navegationApp(authTokenRepository: AuthTokenRepository) {
 
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CoLabTasksAppTheme {
-        Greeting("Android")
-    }
-}*/
